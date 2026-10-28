@@ -45,11 +45,32 @@ def reset_screen_safely():
 atexit.register(reset_screen_safely)
 
 
+def get_resource_path(relative_path):
+    """Lấy đường dẫn tài nguyên tuyệt đối, hoạt động cả ở dev lẫn khi đóng gói PyInstaller"""
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
+
+
 def get_config_path():
     appdata = os.getenv("APPDATA") or os.path.expanduser("~")
-    config_dir = os.path.join(appdata, "EInkDisplayPro")
+    config_dir = os.path.join(appdata, "EInkDisplay")
     os.makedirs(config_dir, exist_ok=True)
-    return os.path.join(config_dir, "eink_config.json")
+    new_cfg = os.path.join(config_dir, "eink_config.json")
+
+    # Di chuyển cấu hình cũ nếu trước đây người dùng từng lưu với tên EInkDisplayPro
+    old_dir = os.path.join(appdata, "EInkDisplayPro")
+    old_cfg = os.path.join(old_dir, "eink_config.json")
+    if not os.path.exists(new_cfg) and os.path.exists(old_cfg):
+        try:
+            import shutil
+            shutil.copy2(old_cfg, new_cfg)
+        except Exception:
+            pass
+
+    return new_cfg
 
 
 CONFIG_FILE = get_config_path()
@@ -171,12 +192,14 @@ class EInkControllerApp:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("E-Ink Display Pro")
+        self.root.title("E-ink Display")
         self.root.resizable(False, False)
         self.root.attributes("-topmost", True)
+        self._set_app_icon()
 
         self.initializing = True
         self.is_closing = False
+        self._save_timer = None
 
         if not mag_dll.MagInitialize():
             raise RuntimeError("Cannot initialize Windows Magnification API.")
@@ -227,6 +250,29 @@ class EInkControllerApp:
 
         self.root.bind("<Escape>", lambda e: self.set_normal())
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def _set_app_icon(self):
+        """Thiết lập biểu tượng ứng dụng riêng (logo) cho cửa sổ và Taskbar"""
+        ico_path = get_resource_path("app_icon.ico")
+        png_path = get_resource_path("app_logo.png")
+
+        # Đặt icon .ico cho Windows title bar và taskbar
+        if os.path.exists(ico_path):
+            try:
+                self.root.iconbitmap(default=ico_path)
+            except Exception:
+                try:
+                    self.root.iconbitmap(ico_path)
+                except Exception:
+                    pass
+
+        # Đặt icon .png làm fallback và hỗ trợ hiển thị sắc nét
+        if os.path.exists(png_path):
+            try:
+                self.app_icon_photo = tk.PhotoImage(file=png_path)
+                self.root.iconphoto(False, self.app_icon_photo)
+            except Exception:
+                pass
 
     def load_config(self):
         if os.path.exists(CONFIG_FILE):
@@ -460,7 +506,12 @@ class EInkControllerApp:
         if self.initializing or self.is_closing:
             return
         self.update_eink_effect(status_key="mode_custom")
-        self.save_config()
+        if self._save_timer is not None:
+            try:
+                self.root.after_cancel(self._save_timer)
+            except Exception:
+                pass
+        self._save_timer = self.root.after(300, self.save_config)
 
     def apply_preset(self, brightness, warmth, ink, status_key):
         if self.is_closing:
@@ -514,9 +565,9 @@ class EInkControllerApp:
         effective_scale = max(0.2, b - ink)
         luma_r, luma_g, luma_b = 0.299, 0.587, 0.114
 
-        r_mult = effective_scale * (1.0 + w * 0.25)
-        g_mult = effective_scale * (1.0 - w * 0.15)
-        b_mult = effective_scale * (1.0 - w * 0.85)
+        r_mult = min(effective_scale * (1.0 + w * 0.25), 1.0 - ink)
+        g_mult = min(effective_scale * (1.0 - w * 0.15), 1.0 - ink)
+        b_mult = min(effective_scale * (1.0 - w * 0.85), 1.0 - ink)
 
         matrix = create_matrix([
             [luma_r * r_mult, luma_r * g_mult, luma_r * b_mult, 0.0, 0.0],
@@ -540,12 +591,17 @@ class EInkControllerApp:
         """Đóng ứng dụng an toàn tuyệt đối khi bấm nút X của cửa sổ"""
         if self.is_closing:
             return
+        if self._save_timer is not None:
+            try:
+                self.root.after_cancel(self._save_timer)
+            except Exception:
+                pass
         self.save_config()
         self.is_closing = True
         try:
-            self.scale_bright.configure(command="")
-            self.scale_warm.configure(command="")
-            self.scale_ink.configure(command="")
+            self.scale_bright.configure(command=lambda _: None)
+            self.scale_warm.configure(command=lambda _: None)
+            self.scale_ink.configure(command=lambda _: None)
         except Exception:
             pass
 
@@ -560,7 +616,16 @@ class EInkControllerApp:
 
 
 if __name__ == "__main__":
-    mutex = kernel32.CreateMutexW(None, False, "EInkDisplayPro_SingleInstance")
+    # Gán ID riêng biệt cho tiến trình để Windows hiển thị đúng icon app trên Taskbar
+    try:
+        myappid = "einkapp.einkdisplay.reader.1.0"
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except Exception:
+        pass
+
+    kernel32.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_bool, ctypes.c_wchar_p]
+    kernel32.CreateMutexW.restype = ctypes.c_void_p
+    mutex = kernel32.CreateMutexW(None, False, "EInkDisplay_SingleInstance")
     if kernel32.GetLastError() == 183:
         sys.exit(0)
 
