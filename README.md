@@ -1,61 +1,75 @@
 # 📖 E-Ink Display Pro for Windows
 
-[**🇬🇧 English**](#-english) | [**🇻🇳 Tiếng Việt**](#-tiếng-việt)
+**[🇬🇧 English](#-english) | [🇻🇳 Tiếng Việt](#-tiếng-việt)**
 
 ---
 
 ## 🇬🇧 English
 
-A lightweight utility that transforms your laptop or PC screen into an eye-friendly **E-Ink display (Kindle/Boox simulation)** using GPU hardware acceleration via the Windows Magnification API (Zero lag, zero FPS drop).
+A lightweight desktop utility that transforms your laptop or PC monitor into an eye-friendly **E-Ink display** (Kindle / Onyx Boox simulation) using GPU hardware acceleration via the **Windows Magnification API** (`MagSetFullscreenColorEffect`) — delivering **zero lag** and **zero FPS drop**.
 
 ### ✨ Key Features
-- **3 Built-in Presets:** Soft Gray Newsprint (Anti-glare), Classic Warm Paper, and Ultra-Dim Night Reading.
-- **Real-time Fine-tuning Sliders:** Directly adjust Paper Brightness, Warmth (Blue-light cut), and Ink Softness (Matte contrast).
-- **Personal Preset & Auto-Save:** Automatically saves your custom slider settings to `AppData` (`eink_config.json`) for the next launch.
-- **Multi-language UI:** Instant switching between Tiếng Việt 🇻🇳, English 🇺🇸, 中文 🇨🇳, and 日本語 🇯🇵.
-- **Zero External Dependencies:** Built purely with Python's standard libraries (`ctypes`, `tkinter`).
+* **4 Built-in E-Ink Presets:**
+  * 📰 **Soft Gray E-Ink (Newsprint):** Eliminates harsh white glare (`#FFFFFF`) into soothing matte newsprint gray.
+  * 📖 **Classic Warm Paper:** Adds a paper-like sepia warmth while cutting blue light.
+  * 🌙 **Night Reading E-Ink:** Ultra-dim low-glare paper mode to prevent eye strain in dark environments.
+  * 🌑 **Dark E-Ink (Inverted Mode):** Charcoal matte background with soft warm-white ink.
+* **Real-time Fine-tuning Sliders:** Directly adjust **Paper Brightness**, **Warmth (Blue-light Cut)**, and **Ink Softness (Matte Black)** in real time.
+* **Personal Preset & Auto-save:** Save your favorite custom configuration (`settings.json`) and automatically restore your preferred language and display settings on startup.
+* **Multi-language Support:** Built-in support for **Vietnamese (🇻🇳), English (🇺🇸), Chinese Simplified (🇨🇳), and Japanese (🇯🇵)**.
+* **System Tray Integration:** Minimize neatly to the Windows System Tray for quick one-click switching without cluttering your taskbar.
 
-### 🚀 How to Use
-1. **Option 1 (Standalone `.exe` - Recommended):** Download `E-Ink_Pro.exe` from the [**Releases**](../../releases) section on the right and run it directly (no Python installation required).
-2. **Option 2 (Run from Python source):**
-   ```bash
-   python eink_mode.py
-   ```
-3. **Build `.exe` yourself (Optional):**
-   ```bash
-   pip install pyinstaller
-   pyinstaller --noconsole --onefile --clean --name "E-Ink_Pro" eink_mode.py
-   ```
+### 🚀 Installation & Usage
 
-### ⌨️ Shortcuts & Tips
-- Press **`Esc`** while the app window is focused (or click the top blue button) to instantly restore your original display colors.
-- Minimize the window to the taskbar while reading to keep the E-Ink effect active. Closing the window (`X`) safely restores the original screen.
+#### Option 1: Download Pre-built `.exe` (Recommended)
+1. Go to the **[Releases](../../releases)** section on the right side of this repository.
+2. Download the latest **`E-Ink_Display.exe`** file.
+3. Double-click to run directly — **no Python installation required!**
+
+#### Option 2: Run from Source Code (`eink_mode.py`)
+```bash
+git clone [https://github.com/Nhanmykhe/E-ink-Display.git](https://github.com/Nhanmykhe/E-ink-Display.git)
+cd E-ink-Display
+python eink_mode.py
+```
 
 ---
 
 ## 🇻🇳 Tiếng Việt
 
-Ứng dụng siêu nhẹ giúp chuyển đổi màn hình Laptop/PC sang chế độ **Giả lập Màn hình Đọc Sách E-Ink (Kindle/Boox)** bằng phần cứng GPU thông qua Windows Magnification API (Độ trễ bằng 0, không tụt FPS).
+Phần mềm tiện ích siêu nhẹ giúp biến màn hình máy tính/laptop Windows của bạn thành **màn hình giấy điện tử E-Ink** (mô phỏng chuẩn máy đọc sách Kindle / Boox) thông qua tăng tốc phần cứng GPU của **Windows Magnification API** — **không giật lag, không tụt FPS** và áp dụng trên toàn bộ hệ điều hành.
 
 ### ✨ Tính năng nổi bật
-- **3 Chế độ cài sẵn (Presets):** Giấy báo trắng xám dịu (chống chói), Giấy cổ điển ấm dịu, và Đọc đêm siêu tối.
-- **Thanh trượt tinh chỉnh trực tiếp:** Điều chỉnh thời gian thực Độ sáng nền giấy, Độ ấm (khử ánh sáng xanh) và Độ dịu mực đen (Matte Ink).
-- **Lưu cấu hình cá nhân & Tự động nhớ (Auto-Save):** Tự động lưu thông số vào thư mục `AppData` (`eink_config.json`) cho lần mở sau.
-- **Đa ngôn ngữ:** Chuyển đổi tức thì giữa Tiếng Việt 🇻🇳, English 🇺🇸, 中文 🇨🇳, 日本語 🇯🇵.
-- **Không cần thư viện ngoài:** Chỉ sử dụng thư viện chuẩn có sẵn của Python (`ctypes`, `tkinter`).
+* **4 Chế độ E-Ink cài sẵn:**
+  * 📰 **E-Ink Trắng Xám Dịu (Giấy báo):** Khử hoàn toàn độ chói của màu trắng tinh (`#FFFFFF`), chuyển về tông xám giấy báo dịu mắt.
+  * 📖 **E-Ink Giấy Cổ Điển:** Tông màu giấy ngả vàng ấm áp, lọc ánh sáng xanh có hại cho mắt.
+  * 🌙 **E-Ink Đọc Đêm:** Hạ sâu độ sáng nền giấy, chống mỏi mắt khi làm việc hoặc đọc tài liệu ban đêm.
+  * 🌑 **Dark E-Ink (Nền Đen Mực Trắng):** Đảo ngược thông minh với nền than chì dịu và chữ trắng ngà ấm.
+* **3 Thanh trượt tinh chỉnh thời gian thực:** Tự do điều chỉnh **Độ sáng nền giấy**, **Độ ấm (Khử ánh sáng xanh)** và **Độ dịu mực đen (Matte Ink)**.
+* **Lưu cấu hình cá nhân & Tự động ghi nhớ:** Cho phép lưu thông số yêu thích của riêng bạn và tự động khôi phục trạng thái mỗi khi mở lại ứng dụng.
+* **Hỗ trợ Đa ngôn ngữ:** Tích hợp sẵn 4 ngôn ngữ **Tiếng Việt (🇻🇳), Tiếng Anh (🇺🇸), Tiếng Trung (🇨🇳) và Tiếng Nhật (🇯🇵)**.
+* **Chạy ngầm ở Khay hệ thống (System Tray):** Thu gọn gọn gàng xuống góc phải thanh Taskbar để bật/tắt nhanh bất kỳ lúc nào.
 
-### 🚀 Cách sử dụng
-1. **Cách 1 (Dùng ngay file `.exe` - Khuyên dùng):** Tải file `E-Ink_Pro.exe` tại mục [**Releases**](../../releases) ở góc bên phải trang GitHub và chạy trực tiếp (không cần cài Python).
-2. **Cách 2 (Chạy từ mã nguồn Python):**
-   ```bash
-   python eink_mode.py
-   ```
-3. **Tự đóng gói sang file `.exe` (Tùy chọn):**
-   ```bash
-   pip install pyinstaller
-   pyinstaller --noconsole --onefile --clean --name "E-Ink_Pro" eink_mode.py
-   ```
+### 🚀 Hướng dẫn Tải và Sử dụng
 
-### ⌨️ Phím tắt & Mẹo sử dụng
-- Nhấn phím **`Esc`** khi đang mở cửa sổ ứng dụng (hoặc bấm nút màu xanh trên cùng) để trả màn hình về màu gốc ngay lập tức.
-- Khi đang đọc sách, hãy thu nhỏ (`Minimize -`) cửa sổ xuống thanh Taskbar để giữ chế độ E-Ink. Khi đọc xong, bấm nút đóng (`X`) để tắt E-Ink và trả lại màn hình bình thường.
+#### Cách 1: Tải file `.exe` chạy ngay (Khuyên dùng)
+1. Truy cập mục **[Releases](../../releases)** ở cột bên phải của trang GitHub này.
+2. Tải file **`E-Ink_Display.exe`** mới nhất về máy.
+3. Mở lên và sử dụng ngay lập tức (**không cần cài đặt Python**).
+
+#### Cách 2: Chạy từ mã nguồn (`eink_mode.py`)
+```bash
+git clone [https://github.com/Nhanmykhe/E-ink-Display.git](https://github.com/Nhanmykhe/E-ink-Display.git)
+cd E-ink-Display
+python eink_mode.py
+```
+
+---
+
+## 📁 Cấu trúc thư mục / Project Structure
+```text
+E-ink-Display/
+├── eink_mode.py      # Mã nguồn chính (Main Python source code)
+├── README.md         # Tài liệu hướng dẫn (Documentation)
+└── .gitignore        # Cấu hình bỏ qua các file tạm khi build
+```
