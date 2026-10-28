@@ -1,4 +1,4 @@
-# 📖 E-Ink Display Pro for Windows
+# 📖 E-Ink Display for Windows
 
 **[🇬🇧 English](#-english) | [🇻🇳 Tiếng Việt](#-tiếng-việt)**
 
